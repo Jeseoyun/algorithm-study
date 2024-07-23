@@ -10,6 +10,7 @@
 
 2024-07-23 15:14
 
-
+### 주석 코드
+Fail (제한시간 초과)
 
 > 출처: SW Expert Academy, https://swexpertacademy.com/main/code/problem/problemList.do
