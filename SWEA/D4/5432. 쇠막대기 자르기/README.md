@@ -10,6 +10,10 @@
 
 2024-07-23 15:14
 
+### 문제 풀이 이미지
+![solution](https://github.com/user-attachments/assets/0ea7de39-7ef7-407a-be56-22aa5e576e48)
+
+
 ### 주석 코드
 Fail (제한시간 초과)
 
