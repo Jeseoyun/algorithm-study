@@ -1,3 +1,6 @@
+from collections import deque
+
+
 def check_diff(a, b):
     cnt = sum(1 for aa, bb in zip(a, b) if aa != bb)
     return cnt == 1
@@ -18,9 +21,29 @@ def change_char_dfs(words, target, visited, curr_idx, depth=0):
     return min_depth
 
 
+def change_char_bfs(begin, target, words):
+    if target not in words:
+        return 0
+    
+    queue = deque([(begin, 0)])
+    visited = set([begin])
+    
+    while queue:
+        curr_word, depth = queue.popleft()
+        
+        if curr_word == target:
+            return depth
+        
+        for word in words:
+            if word not in visited and check_diff(curr_word, word):
+                visited.add(word)
+                queue.append((word, depth+1))
+
+
 def solution(begin, target, words):
     # begin을 words의 첫 원소로 넣어 dfs 탐색
     words = [begin] + words
     visited = [False] * len(words)
-    result = change_char_dfs(words, target, visited, 0)
+    # result = change_char_dfs(words, target, visited, 0)
+    result = change_char_bfs(begin, target, words)
     return result if result != float('inf') else 0
