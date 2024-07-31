@@ -1,3 +1,38 @@
+'''DFS 풀이 - 시간 초과 오류'''
+# def select_candy(arr, k, idx, comb, selected):
+#     if len(comb) == k:
+#         selected.append(comb[-1]-comb[0])
+#         return
+#
+#     if idx == len(arr):
+#         return
+#
+#     # 현재 요소를 선택하는 경우
+#     select_candy(arr, k, idx+1, comb+[arr[idx]], selected)
+#     # 현재 요소를 선택하지 않는 경우
+#     select_candy(arr, k, idx+1, comb, selected)
+#
+#
+# def main():
+#     T = int(input())
+#
+#     for test_case in range(1, T + 1):
+#         N, K = map(int, input().split())
+#         candy = list(map(int, input().split()))
+#
+#         selected = []
+#         candy.sort()
+#         select_candy(candy, K, 0, [], selected)
+#
+#         # diff = [max(comb)-min(comb) for comb in selected]
+#
+#         print(f"#{test_case} {min(selected)}")
+#
+#
+# if __name__ == "__main__":
+#     main()
+
+
 def main():
     T = int(input())
 
