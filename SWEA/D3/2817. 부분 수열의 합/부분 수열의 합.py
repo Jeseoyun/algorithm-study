@@ -7,6 +7,9 @@ class Counter:
 
 
 def subset_sum(arr, k, idx, subset, counter):
+    if sum(subset) > k:
+        return
+    
     if idx == len(arr):
         if sum(subset) == k:
             counter.increase()
