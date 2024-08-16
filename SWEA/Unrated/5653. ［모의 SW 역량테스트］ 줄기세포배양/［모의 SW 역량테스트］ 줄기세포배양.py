@@ -44,9 +44,8 @@ def main():
 
         # K 시간 동안 줄기세포 배양 진행
         while K:
-            spread = {}  # 새로운 세포 번식을 기록할 딕셔너리
+            spread = {}  # 이번 턴에 번식한 놈들 저장
             for pos in cells.keys():
-                # print(pos, cells[pos])
                 x, y = pos
                 vitality, vital_cnt, active = cells[pos]
 
@@ -68,18 +67,19 @@ def main():
                         nx, ny = x + dx, y + dy
                         new_pos = (nx, ny)
 
-                        if new_pos not in cells.keys():  # dict.keys()도 hash로 동작해서 평균 시간 복잡도 O(1)이라고 한다
-                            if new_pos not in spread.keys():
+                        # 만약 이미 이전에 배양된 세포가 있으면 번식한 놈을 추가하지 않는다 (이번에 번식한 놈들에 대해서만 진행)
+                        if new_pos in cells.keys():  continue
+                        
+                        if new_pos not in spread.keys():
+                            spread[new_pos] = [vitality, vitality, False]
+                        else:
+                            # 생명력 비교하여 더 큰 생명력 가진 세포가 먹는다
+                            if spread[new_pos][0] < vitality:
                                 spread[new_pos] = [vitality, vitality, False]
-                            else:
-                                # 생명력 비교하여 더 큰 생명력 가진 세포가 먹는다
-                                if spread[new_pos][0] < vitality:
-                                    spread[new_pos] = [vitality, vitality, False]
 
                     cells[pos][1] -= 1
-
-            # spread 딕셔너리에 기록된 새로운 세포를 cells에 추가
-            # if not spread:  continue
+           
+            # 새로 번식한 놈들을 추가해준다
             for new_pos, cell_info in spread.items():
                 if new_pos in cells:
                     if cells[new_pos][0] < cell_info[0]:
