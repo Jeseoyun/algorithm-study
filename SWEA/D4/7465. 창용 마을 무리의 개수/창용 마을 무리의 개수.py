@@ -21,7 +21,7 @@ def disjoint_set(adj_list, N):
         pe = find_set(end)
 
         if ps != pe:
-            union(ps, pe)
+            union(start, end)
     
     for i in range(len(p)):
         find_set(i)
