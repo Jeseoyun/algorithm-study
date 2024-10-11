@@ -2,8 +2,13 @@ from collections import deque
 
 
 def bfs(sx, sy):
+    queue = deque([])
+
+    # 초기값 설정
+    queue.append((sx, sy))
+    visited[sx][sy] = 1
     danji_cnt = 1
-    queue = deque([(sx, sy)])
+
     dxy = [(-1, 0), (0, 1), (0, -1), (1, 0)]
 
     while queue:
@@ -34,11 +39,8 @@ danji_num = []
 for i in range(N):
     for j in range(N):
         if not visited[i][j] and danji[i][j]==1:
-            visited[i][j] = 1
             danji_num.append(bfs(i, j))
 
-sorted_danji_num = sorted(danji_num)
-print(len(danji_num), end="")
-for dn in sorted_danji_num:
-    print()
-    print(dn, end="")
+print(len(danji_num))
+for dn in sorted(danji_num):
+    print(dn)
