@@ -11,6 +11,7 @@ def main():
     MIN_STREAK = 3
 
     for subject in time_table:
+        # 1. 현재 상태 체크
         if subject in like:
             new_status = 1
         elif subject in dislike:
@@ -18,14 +19,18 @@ def main():
         else:
             new_status = 0
 
+        # 2. 이전과 상태가 연속적인지 체크
         if new_status != status:
+            # 연속적이지 않은데, 이전에 min_strick 이상 연속되었을 경우 선호도 업데이트
             if streak >= MIN_STREAK:
                 preference += (streak * status)
             streak = 1
             status = new_status
         else:
+            # 연속적이면 strick 업데이트
             streak += 1
-
+    
+    # 마지막 과목도 체크
     if streak >= MIN_STREAK:
         preference += (streak * status)
 
