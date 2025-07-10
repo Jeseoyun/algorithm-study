@@ -30,5 +30,5 @@ WITH possible_filtered_car AS (
 SELECT fc.car_id, fc.car_type, ROUND(fc.daily_fee*30*(100-dp.discount_rate)*0.01, 0) AS fee
 FROM possible_filtered_car AS fc
 JOIN car_rental_company_discount_plan dp ON dp.car_type = fc.car_type AND dp.duration_type = '30일 이상'
-WHERE ROUND(fc.daily_fee*30*(100-dp.discount_rate)*0.01, 0) >= 500000 AND ROUND(fc.daily_fee*30*(100-dp.discount_rate)*0.01, 0) < 2000000
+HAVING fee >= 500000 AND fee < 2000000
 ORDER BY FEE DESC, car_type ASC, car_id DESC;
