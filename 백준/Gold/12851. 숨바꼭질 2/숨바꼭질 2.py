@@ -6,9 +6,9 @@ INF = float('inf')
 def main():
     n, k = map(int, input().split())  # 시작점, 도착점
 
-    if n == k:
-        print(0, 1, sep="\n")
-        return
+    # if n == k:
+    #     print(0, 1, sep="\n")
+    #     return
 
     queue = deque([n])
     visited = [INF for _ in range(LIMIT)]
@@ -20,18 +20,18 @@ def main():
     while queue:
         x = queue.popleft()
 
+        if x == k:
+            if min_time > visited[x]:
+                min_time = visited[x]
+                min_time_cnt = 1
+            elif min_time == visited[x]:
+                min_time_cnt += 1
+
         for nx in (x - 1, x + 1, 2 * x):
             if nx < 0 or nx >= LIMIT:
                 continue
             if visited[nx] < visited[x] + 1:
                 continue
-
-            if nx == k:
-                if min_time > visited[x] + 1:
-                    min_time = visited[x] + 1
-                    min_time_cnt = 1
-                elif min_time == visited[x] + 1:
-                    min_time_cnt += 1
 
             if visited[nx] >= visited[x] + 1:
                 visited[nx] = visited[x] + 1
