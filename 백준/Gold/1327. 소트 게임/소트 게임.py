@@ -3,7 +3,7 @@ from collections import deque
 INF = float('inf')
 
 
-def sort_game(arr, n, k, idx):
+def sort_game(arr, n, k):
     queue = deque([(arr[:], 0)])
     target = sorted(arr)
     visited = set()
@@ -33,12 +33,8 @@ def main():
 
     arr = list(map(int, input().split()))
 
-    min_cnt = INF
-    for idx in range(0, N-K+1):
-        cnt = sort_game(arr, N, K, 0)
-        min_cnt = min(cnt, min_cnt) if cnt != -1 else min_cnt
-
-    print(min_cnt if min_cnt!=INF else -1)
+    cnt = sort_game(arr, N, K)
+    print(cnt)
 
 
 if __name__ == "__main__":
