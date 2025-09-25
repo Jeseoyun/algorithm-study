@@ -42,9 +42,9 @@ def rearrange(board, bombed_pos):
         # 1. 0 빼고 행 추출
         column = [board[i][j] for i in range(N) if board[i][j]]
 
-        # 2. 빠진놈들 -1로 채워넣기
+        # 2. 빠진놈들 . 으로 채워넣기
         while len(column) != N:
-            column.insert(0, -1)
+            column.insert(0, ".")
 
         # 3. 다시 복귀시키기
         for i in range(N):
@@ -61,9 +61,6 @@ def main():
         for i in range(N):
             for j in range(M):
                 if puyo[i][j] == ".":
-                    continue
-
-                if puyo[i][j] == -1:
                     continue
 
                 if (i, j) in bombed_pos:
