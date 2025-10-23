@@ -4,7 +4,7 @@ INF = float('inf')
 
 
 def dijkstra(graph, N, oil, start, end):
-    dist = [[INF]*(max(oil.values())+1) for _ in range(N+1)]
+    dist = [[INF] * (max(oil.values()) + 1) for _ in range(N + 1)]
     # print(dist)
     heap = [(0, start, oil[start])]  # cost, node, min_oil
     dist[start][oil[start]] = 0
@@ -13,6 +13,9 @@ def dijkstra(graph, N, oil, start, end):
         curr_cost, curr_node, prev_min_oil = heapq.heappop(heap)
         # print("curr_node:", curr_node, "curr_cost:", curr_cost, "prev_min_oil:", prev_min_oil)
         # print(dist)
+
+        if curr_node == end:
+            return min(dist[end])
 
         if dist[curr_node][prev_min_oil] < curr_cost:
             continue
@@ -30,9 +33,9 @@ def dijkstra(graph, N, oil, start, end):
 
 def main():
     N, M = map(int, input().split())  # 도시 수, 도로 수
-    s_oil = {idx+1: val for idx, val in enumerate(map(int, input().split()))}
+    s_oil = {idx + 1: val for idx, val in enumerate(map(int, input().split()))}
 
-    road = {node: [] for node in range(1, N+1)}
+    road = {node: [] for node in range(1, N + 1)}
     for _ in range(M):
         a, b, d = map(int, input().split())
         road[a].append((d, b))
