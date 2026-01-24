@@ -1,5 +1,5 @@
 dxy = [(1, 0), (0, -1), (-1, 0), (0, 1)]
-square = [(0, 0), (1, 0), (0, 1), (1, 1)]
+square = [(1, 0), (0, 1), (1, 1)]
 
 
 def spin_by_pos(base, target):
@@ -47,6 +47,7 @@ def main():
         for qx, qy in square:
             if (x+qx, y+qy) not in spots:
                 is_square = False
+                break
 
         if is_square:
             square_cnt += 1
