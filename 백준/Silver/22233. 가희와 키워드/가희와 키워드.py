@@ -3,10 +3,13 @@ def main():
     keywords = set(input() for _ in range(N))
 
     out = []
+    append = out.append
+    diff_update = keywords.difference_update
+
     for _ in range(M):
-        memos = set(input().split(","))
-        keywords -= memos
-        out.append(len(keywords))
+        line = input().rstrip()
+        diff_update(line.split(","))   # set 만들지 말고 iterable 그대로
+        append(str(len(keywords)))
 
     print(*out, sep="\n")
 
