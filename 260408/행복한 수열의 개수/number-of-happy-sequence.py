@@ -1,9 +1,3 @@
-from collections import deque
-
-
-dxy = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-
-
 def main():
     N, M = map(int, input().split())
     info = [list(map(int, input().split())) for _ in range(N)]
@@ -45,7 +39,7 @@ def main():
         if seq >= M:
             found = True
 
-        if seq >= M:
+        if found:
             happy += 1
 
     print(happy)
