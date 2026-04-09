@@ -1,0 +1,80 @@
+name: Move Codetree files
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  move-files:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Move changed files that start with a number
+        shell: bash
+        run: |
+          set -e
+
+          BEFORE="${{ github.event.before }}"
+          AFTER="${{ github.sha }}"
+
+          echo "Before: $BEFORE"
+          echo "After : $AFTER"
+
+          # 처음 push 등 예외 상황 처리
+          if [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+            CHANGED_FILES=$(git ls-tree -r --name-only "$AFTER")
+          else
+            CHANGED_FILES=$(git diff --name-only "$BEFORE" "$AFTER")
+          fi
+
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
+
+          MOVED=0
+
+          while IFS= read -r file; do
+            [ -z "$file" ] && continue
+
+            # 이미 이동된 파일은 제외
+            if [[ "$file" == Codetree-TILs/* ]]; then
+              continue
+            fi
+
+            # 최상위 경로가 숫자로 시작하는 경우만 처리
+            # 예: 240409/boj/test.py
+            if [[ "$file" =~ ^[0-9] ]]; then
+              # 삭제된 파일은 건너뜀
+              if [ ! -e "$file" ]; then
+                continue
+              fi
+
+              target="Codetree-TILs/$file"
+              target_dir=$(dirname "$target")
+
+              mkdir -p "$target_dir"
+              git mv "$file" "$target"
+              echo "Moved: $file -> $target"
+              MOVED=1
+            fi
+          done <<< "$CHANGED_FILES"
+
+          echo "MOVED=$MOVED" >> $GITHUB_ENV
+
+      - name: Commit and push
+        if: env.MOVED == '1'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git commit -m "chore: move Codetree files under Codetree-TILs"
+          git push
