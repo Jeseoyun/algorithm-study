@@ -1,0 +1,62 @@
+name: Move Codetree files
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  move-files:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Show repository root
+        run: |
+          echo "=== Repository root ==="
+          pwd
+          ls -la
+
+      - name: Move numeric-leading top-level paths under Codetree-TILs
+        shell: bash
+        run: |
+          set -e
+
+          mkdir -p Codetree-TILs
+          moved=0
+
+          shopt -s nullglob dotglob
+
+          for path in *; do
+            if [[ "$path" == ".github" || "$path" == "Codetree-TILs" ]]; then
+              continue
+            fi
+
+            if [[ "$path" =~ ^[0-9] ]]; then
+              echo "Moving: $path -> Codetree-TILs/$path"
+              git mv "$path" "Codetree-TILs/$path"
+              moved=1
+            fi
+          done
+
+          echo "MOVED=$moved" >> "$GITHUB_ENV"
+
+      - name: Show git status
+        run: git status --short
+
+      - name: Commit changes
+        if: env.MOVED == '1'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore(codetree): organize submissions under Codetree-TILs"
+
+      - name: Push changes
+        if: env.MOVED == '1'
+        run: git push
