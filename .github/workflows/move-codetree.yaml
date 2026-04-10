@@ -17,12 +17,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Show repository root
-        run: |
-          echo "=== Repository root ==="
-          pwd
-          ls -la
-
       - name: Move numeric top-level paths under Codetree-TILs
         shell: bash
         run: |
@@ -32,15 +26,20 @@ jobs:
           moved=0
 
           for path in *; do
-            # 제외할 폴더
             if [[ "$path" == ".github" || "$path" == "Codetree-TILs" ]]; then
               continue
             fi
 
-            # 이름이 숫자로 시작하는 최상위 파일/폴더만 이동
             if [[ "$path" =~ ^[0-9] ]]; then
-              echo "Moving: $path -> Codetree-TILs/$path"
-              git mv "$path" "Codetree-TILs/$path"
+              target="Codetree-TILs/$path"
+
+              if [[ -e "$target" ]]; then
+                echo "Skip: $target already exists"
+                continue
+              fi
+
+              echo "Moving: $path -> $target"
+              git mv "$path" "$target"
               moved=1
             fi
           done
