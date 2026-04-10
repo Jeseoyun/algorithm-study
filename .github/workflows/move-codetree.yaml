@@ -23,7 +23,7 @@ jobs:
           pwd
           ls -la
 
-      - name: Move numeric-leading top-level paths under Codetree-TILs
+      - name: Move numeric top-level paths under Codetree-TILs
         shell: bash
         run: |
           set -e
@@ -31,13 +31,13 @@ jobs:
           mkdir -p Codetree-TILs
           moved=0
 
-          shopt -s nullglob dotglob
-
           for path in *; do
+            # 제외할 폴더
             if [[ "$path" == ".github" || "$path" == "Codetree-TILs" ]]; then
               continue
             fi
 
+            # 이름이 숫자로 시작하는 최상위 파일/폴더만 이동
             if [[ "$path" =~ ^[0-9] ]]; then
               echo "Moving: $path -> Codetree-TILs/$path"
               git mv "$path" "Codetree-TILs/$path"
