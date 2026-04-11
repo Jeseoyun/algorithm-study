@@ -10,7 +10,7 @@ def main():
     for i in range(4, N+1):
         step[i] = step[i-2] + step[i-3]
     
-    print(step[N])
+    print(step[N]%10007)
 
 
 if __name__ == "__main__":
