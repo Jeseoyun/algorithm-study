@@ -27,12 +27,12 @@ jobs:
           set -e
           shopt -s dotglob nullglob
 
-          mkdir -p Codetree-TILs
+          mkdir -p Codetree/TILs
           moved=0
 
           for path in *; do
             if [[ "$path" == ".github" || \
-                  "$path" == "Codetree-TILs" || \
+                  "$path" == "Codetree" || \
                   "$path" == "SWEA" || \
                   "$path" == "백준" || \
                   "$path" == "프로그래머스" ]]; then
@@ -41,7 +41,7 @@ jobs:
 
             # 숫자로 시작하는 폴더만
             if [[ "$path" =~ ^[0-9] && -d "$path" ]]; then
-              target_dir="Codetree-TILs/$path"
+              target_dir="Codetree/TILs/$path"
               mkdir -p "$target_dir"
 
               for item in "$path"/*; do
@@ -77,7 +77,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "chore(codetree): overwrite submissions under Codetree-TILs"
+          git commit -m "chore(codetree): overwrite submissions under Codetree/TILs"
 
       - name: Push changes
         if: env.MOVED == '1'
