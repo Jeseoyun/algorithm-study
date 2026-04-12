@@ -17,7 +17,9 @@ def dfs(x, y, curr):
         if visited[nx][ny]:
             continue
         
+        visited[nx][ny] = True
         dfs(nx, ny, curr+grid[nx][ny])
+        visited[nx][ny] = False
 
     return
 
