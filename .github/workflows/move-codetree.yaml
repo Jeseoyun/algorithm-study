@@ -21,7 +21,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Merge numeric folders (overwrite mode)
+      - name: Merge numeric folders (preserve nested README)
         shell: bash
         run: |
           set -e
@@ -39,30 +39,52 @@ jobs:
               continue
             fi
 
-            # 숫자로 시작하는 폴더만
             if [[ "$path" =~ ^[0-9] && -d "$path" ]]; then
-              target_dir="Codetree/TILs/$path"
-              mkdir -p "$target_dir"
+              target_date_dir="Codetree/TILs/$path"
+              mkdir -p "$target_date_dir"
 
               for item in "$path"/*; do
                 [ -e "$item" ] || continue
-
                 base=$(basename "$item")
-                target="$target_dir/$base"
+                target="$target_date_dir/$base"
 
-                # 기존 있으면 삭제 (덮어쓰기)
-                if [[ -e "$target" ]]; then
-                  echo "Removing existing: $target"
-                  git rm -r --cached "$target" 2>/dev/null || true
-                  rm -rf "$target"
+                # 날짜 바로 아래 파일은 그대로 덮어쓰기
+                if [[ -f "$item" ]]; then
+                  if [[ -e "$target" ]]; then
+                    git rm --cached "$target" 2>/dev/null || true
+                    rm -f "$target"
+                  fi
+                  echo "Moving file: $item -> $target"
+                  git mv "$item" "$target"
+                  moved=1
+                  continue
                 fi
 
-                echo "Moving: $item -> $target"
-                git mv "$item" "$target"
-                moved=1
+                # 문제 폴더면 내부 파일 단위로 merge
+                if [[ -d "$item" ]]; then
+                  mkdir -p "$target"
+
+                  for sub in "$item"/*; do
+                    [ -e "$sub" ] || continue
+                    subbase=$(basename "$sub")
+                    subtarget="$target/$subbase"
+
+                    if [[ -e "$subtarget" ]]; then
+                      git rm -r --cached "$subtarget" 2>/dev/null || true
+                      rm -rf "$subtarget"
+                    fi
+
+                    echo "Moving nested item: $sub -> $subtarget"
+                    git mv "$sub" "$subtarget"
+                    moved=1
+                  done
+
+                  # 소스 문제 폴더가 비면 삭제
+                  rmdir "$item" 2>/dev/null || true
+                fi
               done
 
-              # 비어있으면 루트 폴더 삭제
+              # 소스 날짜 폴더가 비면 삭제
               rmdir "$path" 2>/dev/null || true
             fi
           done
@@ -77,7 +99,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "chore(codetree): overwrite submissions under Codetree/TILs"
+          git commit -m "chore(codetree): organize submissions under Codetree/TILs"
 
       - name: Push changes
         if: env.MOVED == '1'
