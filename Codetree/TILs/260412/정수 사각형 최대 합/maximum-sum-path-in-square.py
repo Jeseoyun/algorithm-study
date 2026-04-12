@@ -3,7 +3,12 @@ dxy = [(1, 0), (0, 1)]  # 밑, 오른쪽으로만 이동
 
 def dfs(x, y):
     if (x, y) == (n-1, n-1):
-        return
+        return grid[x][y]
+
+    if dp[x][y] != -1:
+        return dp[x][y]
+
+    max_val = 0
 
     for dx, dy in dxy:
         nx, ny = x + dx, y + dy
@@ -11,18 +16,15 @@ def dfs(x, y):
         if nx < 0 or nx >= n or ny < 0 or ny >= n:
             continue
 
-        visited[nx][ny] = max(visited[nx][ny], visited[x][y] + grid[nx][ny])
-        dfs(nx, ny)
+        max_val = max(max_val, dfs(nx, ny))
 
-    return
+    dp[x][y] = grid[x][y] + max_val
+    return dp[x][y]
 
 
 n = int(input())
 grid = [list(map(int, input().split())) for _ in range(n)]
 
-visited = [[0]*n for _ in range(n)]
-visited[0][0] = grid[0][0]
+dp = [[-1] * n for _ in range(n)]
 
-dfs(0, 0)
-
-print(visited[n-1][n-1])
+print(dfs(0, 0))
