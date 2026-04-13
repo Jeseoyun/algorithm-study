@@ -16,7 +16,7 @@ def main():
 
         # 2x3 이상 남는 삐진 형태들 누적
         for j in range(i-2):  # 0 ~ i-3까지 2개씩 계속 발생
-            dp[i] += (dp[j] * 2) % MOD
+            dp[i] = (dp[i] + dp[j] * 2) % MOD
 
     print(dp[N])
 
