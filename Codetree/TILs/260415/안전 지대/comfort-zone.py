@@ -36,7 +36,7 @@ def main():
         max_k = max(max_k, sorted_i[-1])
     # print(min_k, max_k)
 
-    best_safe_area = (0, 0)
+    best_safe_area = (-1, -1)
     for k in range(min_k, max_k+1):
         # print(f"====={k}=====")
         visited = [[0]*M for _ in range(N)]
