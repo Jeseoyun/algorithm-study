@@ -37,7 +37,7 @@ def main():
     # print(min_k, max_k)
 
     best_safe_area = (-1, -1)
-    for k in range(min_k, max_k+1):
+    for k in range(1, max_k+1):
         # print(f"====={k}=====")
         visited = [[0]*M for _ in range(N)]
         safe_area = 0
@@ -52,6 +52,7 @@ def main():
                 visited[i][j] = 1
                 dfs(grid, visited, k, N, M, i, j)
                 safe_area += 1
+
         if safe_area > best_safe_area[1]:
             best_safe_area = (k, safe_area)
         # print(f"safe_area: {safe_area}")
